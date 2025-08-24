@@ -106,7 +106,7 @@ CREATE TABLE consumos (
     FOREIGN KEY (id_producto) REFERENCES productos(id_producto)
 );
 
-
+-- Tabla intermedia servicios y promociones
  CREATE TABLE  SERVICIOS_PROMOCIONES (
         id_servicio_promocion INT AUTO_INCREMENT PRIMARY KEY,
         id_servicio  INT NOT NULL,
@@ -115,8 +115,10 @@ CREATE TABLE consumos (
         FOREIGN KEY ( id_promocion) REFERENCES promociones( id_promocion)
         
     );
+    
+   -- ******************************************************************************************************************************************
 
--- INSERCION DE DATOS
+-- -------------------------------------------------------------INSERCION DE DATOS
 
 -- Clientes
 INSERT INTO clientes (nombre, telefono, email, direccion) VALUES
@@ -224,10 +226,10 @@ VALUES
 
 -- Pagos
 INSERT INTO pagos (id_reserva, fecha_pago, monto, medio_pago) VALUES
-(1, '2025-08-21 09:30:00', 1500.00, 'Tarjeta'),
+(1, '2025-08-21 09:30:00', 0.00, 'Tarjeta'),
 (2, '2025-08-21 11:00:00', 2000.00, 'Efectivo'),
 (3, '2025-08-22 09:00:00', 1500.00, 'Tarjeta'),
-(4, '2025-08-22 10:00:00', 800.00, 'Efectivo'),
+(4, '2025-08-22 10:00:00', 0.00, 'Efectivo'),
 (5, '2025-08-22 11:30:00', 2000.00, 'Transferencia'),
 (6, '2025-08-23 08:00:00', 1500.00, 'Tarjeta'),
 (7, '2025-08-23 10:30:00', 800.00, 'Efectivo'),
@@ -266,7 +268,7 @@ INSERT INTO pagos (id_reserva, fecha_pago, monto, medio_pago) VALUES
 (40, '2025-08-31 12:15:00', 1500.00, 'Efectivo');
 
 
--- Cada empleado tiene horarios para lunes a viernes, con turnos mañana, tarde y noche
+-- horarios_empleados - Cada empleado tiene horarios para lunes a viernes, con turnos mañana, tarde y noche
 INSERT INTO horarios_empleados (id_empleado, dia_semana, turno, hora_entrada, hora_salida)
 SELECT 
     e.id_empleado,
@@ -295,7 +297,7 @@ CROSS JOIN (
 CROSS JOIN (SELECT 'Mañana' AS turno UNION SELECT 'Tarde' UNION SELECT 'Noche') t;
 
 
--- Insertar 40 registros en la tabla promociones
+-- promociones
 INSERT INTO promociones (nombre, descripcion, descuento, fecha_inicio, fecha_fin) VALUES
 ('Promo Verano 1', 'Descuento especial para estancias largas en verano.', 10.00, '2025-01-01', '2025-01-31'),
 ('Promo Verano 2', 'Promo de verano: descuento en reservas de más de 5 días.', 12.50, '2025-01-01', '2025-02-15'),
@@ -338,7 +340,7 @@ INSERT INTO promociones (nombre, descripcion, descuento, fecha_inicio, fecha_fin
 ('Promo Día del Padre', 'Descuento especial Día del Padre.', 16.00, '2025-06-10', '2025-06-20'),
 ('Promo Día del Trabajador', 'Descuento especial 1 de mayo.', 12.00, '2025-04-30', '2025-05-02');
 
--- Insertar 40 registros en la tabla productos
+-- productos
 INSERT INTO productos (nombre, tipo, stock, precio) VALUES
 ('Alimento Premium Cachorro 3kg', 'Alimento', 50, 3200.00),
 ('Alimento Premium Adulto 15kg', 'Alimento', 30, 14500.00),
@@ -381,7 +383,7 @@ INSERT INTO productos (nombre, tipo, stock, precio) VALUES
 ('Fuente de Agua Gato 2L', 'Accesorio', 10, 9500.00),
 ('Casa de Tela Plegable', 'Accesorio', 8, 11500.00);
 
--- Insertar consumos de mascotas
+-- mascotas
 INSERT INTO consumos (id_mascota, id_producto, fecha_consumo, cantidad) VALUES
 (1, 1, '2025-08-01 10:15:00', 1),   
 (1, 5, '2025-08-01 10:20:00', 2),   
@@ -425,7 +427,7 @@ INSERT INTO consumos (id_mascota, id_producto, fecha_consumo, cantidad) VALUES
 (20, 40, '2025-08-12 14:10:00', 1);
 
 
--- Insertar registros en la tabla intermedia SERVICIOS_PROMOCIONES
+--  SERVICIOS_PROMOCIONES
 INSERT INTO SERVICIOS_PROMOCIONES (id_servicio, id_promocion) VALUES
 -- Guardería diaria (id_servicio = 1)
 (1, 1),
