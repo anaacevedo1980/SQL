@@ -60,18 +60,20 @@ CREATE TABLE pagos (
     fecha_pago DATETIME NOT NULL,
     monto DECIMAL(10,2) NOT NULL,
     medio_pago VARCHAR(50),
-    estado_pago VARCHAR(20) DEFAULT 'Pagado',
+    estado_pago VARCHAR(20) DEFAULT 'Pendiente',
     FOREIGN KEY (id_reserva) REFERENCES reservas(id_reserva)
 );
 -- ******************************---
--- Tabla:horarios_empleados
 CREATE TABLE horarios_empleados (
-    id_horario INT AUTO_INCREMENT PRIMARY KEY,
+    id_horario INT PRIMARY KEY AUTO_INCREMENT,
     id_empleado INT NOT NULL,
-    dia_semana ENUM('Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'),
-    hora_entrada TIME,
-    hora_salida TIME,
-    FOREIGN KEY (id_empleado) REFERENCES empleados(id_empleado)
+    dia_semana VARCHAR(20) NOT NULL,
+    turno VARCHAR(20) NOT NULL,
+    hora_entrada DATETIME NOT NULL,
+    hora_salida DATETIME NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_empleado) REFERENCES empleados(id_empleado) ON DELETE CASCADE
 );
 
 -- Tabla:promociones
@@ -107,14 +109,14 @@ CREATE TABLE consumos (
 );
 
 -- Tabla intermedia servicios y promociones
- CREATE TABLE  SERVICIOS_PROMOCIONES (
+ CREATE TABLE  servicios_promociones (
         id_servicio_promocion INT AUTO_INCREMENT PRIMARY KEY,
         id_servicio  INT NOT NULL,
         id_promocion  INT NOT NULL,
         FOREIGN KEY (id_servicio) REFERENCES servicios(id_servicio),
         FOREIGN KEY ( id_promocion) REFERENCES promociones( id_promocion)
         
-    );
+);
     
    -- ******************************************************************************************************************************************
 
@@ -225,47 +227,49 @@ VALUES
 (20, 5, '2025-08-31 12:00:00', '2025-08-31 18:00:00', 1, 'Muy tranquilo durante el día');
 
 -- Pagos
-INSERT INTO pagos (id_reserva, fecha_pago, monto, medio_pago) VALUES
-(1, '2025-08-21 09:30:00', 0.00, 'Tarjeta'),
-(2, '2025-08-21 11:00:00', 2000.00, 'Efectivo'),
-(3, '2025-08-22 09:00:00', 1500.00, 'Tarjeta'),
-(4, '2025-08-22 10:00:00', 0.00, 'Efectivo'),
-(5, '2025-08-22 11:30:00', 2000.00, 'Transferencia'),
-(6, '2025-08-23 08:00:00', 1500.00, 'Tarjeta'),
-(7, '2025-08-23 10:30:00', 800.00, 'Efectivo'),
-(8, '2025-08-23 10:00:00', 2000.00, 'Tarjeta'),
-(9, '2025-08-24 08:30:00', 1500.00, 'Transferencia'),
-(10, '2025-08-24 11:30:00', 2000.00, 'Efectivo'),
-(11, '2025-08-24 09:30:00', 1500.00, 'Tarjeta'),
-(12, '2025-08-25 10:45:00', 2000.00, 'Efectivo'),
-(13, '2025-08-25 08:30:00', 1500.00, 'Transferencia'),
-(14, '2025-08-25 10:00:00', 800.00, 'Tarjeta'),
-(15, '2025-08-26 08:00:00', 2000.00, 'Efectivo'),
-(16, '2025-08-26 09:00:00', 1500.00, 'Tarjeta'),
-(17, '2025-08-26 10:15:00', 2000.00, 'Efectivo'),
-(18, '2025-08-27 09:15:00', 1500.00, 'Transferencia'),
-(19, '2025-08-27 10:45:00', 800.00, 'Tarjeta'),
-(20, '2025-08-27 11:15:00', 2000.00, 'Efectivo'),
-(21, '2025-08-28 09:30:00', 1500.00, 'Tarjeta'),
-(22, '2025-08-28 09:00:00', 800.00, 'Transferencia'),
-(23, '2025-08-28 10:15:00', 2000.00, 'Efectivo'),
-(24, '2025-08-29 09:45:00', 1500.00, 'Tarjeta'),
-(25, '2025-08-29 08:30:00', 800.00, 'Efectivo'),
-(26, '2025-08-29 09:15:00', 2000.00, 'Transferencia'),
-(27, '2025-08-30 08:00:00', 1500.00, 'Tarjeta'),
-(28, '2025-08-30 09:30:00', 2000.00, 'Efectivo'),
-(29, '2025-08-30 11:00:00', 1500.00, 'Tarjeta'),
-(30, '2025-08-31 08:15:00', 1500.00, 'Transferencia'),
-(31, '2025-08-31 09:45:00', 2000.00, 'Efectivo'),
-(32, '2025-08-31 10:15:00', 800.00, 'Tarjeta'),
-(33, '2025-08-31 11:30:00', 1500.00, 'Transferencia'),
-(34, '2025-08-31 07:45:00', 2000.00, 'Tarjeta'),
-(35, '2025-08-31 09:15:00', 800.00, 'Efectivo'),
-(36, '2025-08-31 08:30:00', 1500.00, 'Tarjeta'),
-(37, '2025-08-31 09:30:00', 800.00, 'Transferencia'),
-(38, '2025-08-31 10:45:00', 2000.00, 'Efectivo'),
-(39, '2025-08-31 11:15:00', 1500.00, 'Tarjeta'),
-(40, '2025-08-31 12:15:00', 1500.00, 'Efectivo');
+INSERT INTO pagos (id_reserva, fecha_pago, monto, medio_pago, estado_pago)
+VALUES
+-- Primeros 20 registros con estados variados
+(1, '2024-01-15 10:30:00', 150.00, 'Tarjeta de Crédito', 'Pagado'),
+(2, '2024-01-16 14:45:00', 200.00, 'Transferencia', 'Pagado'),
+(3, '2024-01-17 09:15:00', 180.50, 'Efectivo', 'Pagado'),
+(4, '2024-01-18 16:20:00', 220.00, 'Tarjeta de Débito', 'Pendiente'),
+(5, '2024-01-19 11:00:00', 190.75, 'Tarjeta de Crédito', 'Pagado'),
+(6, '2024-01-20 13:30:00', 210.00, 'Transferencia', 'Pendiente'),
+(7, '2024-01-21 15:45:00', 175.25, 'Efectivo', 'Pagado'),
+(8, '2024-01-22 10:10:00', 230.50, 'Tarjeta de Débito', 'Pagado'),
+(9, '2024-01-23 14:20:00', 195.00, 'Tarjeta de Crédito', 'Pendiente'),
+(10, '2024-01-24 09:45:00', 205.75, 'Transferencia', 'Pagado'),
+(11, '2024-01-25 16:30:00', 185.00, 'Efectivo', 'Pagado'),
+(12, '2024-01-26 11:15:00', 215.25, 'Tarjeta de Débito', 'Pendiente'),
+(13, '2024-01-27 13:40:00', 225.00, 'Tarjeta de Crédito', 'Pagado'),
+(14, '2024-01-28 15:55:00', 195.50, 'Transferencia', 'Pagado'),
+(15, '2024-01-29 10:25:00', 235.75, 'Efectivo', 'Pendiente'),
+(16, '2024-01-30 14:35:00', 205.00, 'Tarjeta de Débito', 'Pagado'),
+(17, '2024-01-31 09:50:00', 245.25, 'Tarjeta de Crédito', 'Pagado'),
+(18, '2024-02-01 16:15:00', 215.50, 'Transferencia', 'Pendiente'),
+(19, '2024-02-02 11:40:00', 255.00, 'Efectivo', 'Pagado'),
+(20, '2024-02-03 13:05:00', 225.75, 'Tarjeta de Débito', 'Pagado'),
+(21, '2024-02-04 15:20:00', 265.00, 'Tarjeta de Crédito', 'Pendiente'),
+(22, '2024-02-05 10:45:00', 235.25, 'Transferencia', 'Pagado'),
+(23, '2024-02-06 14:10:00', 275.50, 'Efectivo', 'Pagado'),
+(24, '2024-02-07 09:35:00', 245.75, 'Tarjeta de Débito', 'Pendiente'),
+(25, '2024-02-08 16:50:00', 285.00, 'Tarjeta de Crédito', 'Pagado'),
+(26, '2024-02-09 12:15:00', 255.25, 'Transferencia', 'Pagado'),
+(27, '2024-02-10 15:40:00', 295.50, 'Efectivo', 'Pendiente'),
+(28, '2024-02-11 11:05:00', 265.75, 'Tarjeta de Débito', 'Pagado'),
+(29, '2024-02-12 14:30:00', 305.00, 'Tarjeta de Crédito', 'Pagado'),
+(30, '2024-02-13 09:55:00', 275.25, 'Transferencia', 'Pendiente'),
+(31, '2024-02-14 16:10:00', 315.50, 'Efectivo', 'Pagado'),
+(32, '2024-02-15 12:35:00', 285.75, 'Tarjeta de Débito', 'Pagado'),
+(33, '2024-02-16 15:00:00', 325.00, 'Tarjeta de Crédito', 'Pendiente'),
+(34, '2024-02-17 10:25:00', 295.25, 'Transferencia', 'Pagado'),
+(35, '2024-02-18 13:50:00', 335.50, 'Efectivo', 'Pagado'),
+(36, '2024-02-19 16:15:00', 305.75, 'Tarjeta de Débito', 'Pendiente'),
+(37, '2024-02-20 11:40:00', 345.00, 'Tarjeta de Crédito', 'Pagado'),
+(38, '2024-02-21 14:05:00', 315.25, 'Transferencia', 'Pagado'),
+(39, '2024-02-22 09:30:00', 355.50, 'Efectivo', 'Pendiente'),
+(40, '2024-02-23 16:45:00', 325.75, 'Tarjeta de Débito', 'Pagado');
 
 
 -- horarios_empleados - Cada empleado tiene horarios para lunes a viernes, con turnos mañana, tarde y noche
@@ -427,8 +431,8 @@ INSERT INTO consumos (id_mascota, id_producto, fecha_consumo, cantidad) VALUES
 (20, 40, '2025-08-12 14:10:00', 1);
 
 
---  SERVICIOS_PROMOCIONES
-INSERT INTO SERVICIOS_PROMOCIONES (id_servicio, id_promocion) VALUES
+--  servicios promociones
+INSERT INTO servicios_promociones (id_servicio, id_promocion) VALUES
 -- Guardería diaria (id_servicio = 1)
 (1, 1),
 (1, 2),
