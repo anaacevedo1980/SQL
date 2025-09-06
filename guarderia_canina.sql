@@ -521,9 +521,9 @@ CREATE OR REPLACE VIEW vista_pagos AS
 SELECT p.id_pago, c.nombre AS cliente, m.nombre AS mascota, 
        p.fecha_pago, p.monto, p.medio_pago, p.estado_pago
 FROM pagos p
-inner JOIN reservas r ON p.id_reserva = r.id_reserva
-inner JOIN mascotas m ON r.id_mascota = m.id_mascota
-inner JOIN clientes c ON m.id_cliente = c.id_cliente;
+INNER JOIN reservas r ON p.id_reserva = r.id_reserva
+INNER JOIN mascotas m ON r.id_mascota = m.id_mascota
+INNER JOIN clientes c ON m.id_cliente = c.id_cliente;
 
 --  vista_reservas_por_servicio  (Muestra cuántas reservas tiene cada servicio y el monto total generado por él)
 CREATE OR REPLACE VIEW vista_reservas_por_servicio AS
